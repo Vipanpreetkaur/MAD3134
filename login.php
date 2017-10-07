@@ -1,120 +1,87 @@
 <?php
-   ob_start();
-   session_start();
-?>
-
-<?
-   // error_reporting(E_ALL);
-   // ini_set("display_errors", 1);
-?>
-
-<html lang = "en">
-   
-   <head>
-      <title>Tutorialspoint.com</title>
-      <link href = "css/bootstrap.min.css" rel = "stylesheet">
-      
-      <style>
-         body {
-            padding-top: 40px;
-            padding-bottom: 40px;
-            background-image: url('images.jpg') ;
-         }
-         
-         .form-signin {
-            max-width: 330px;
-            padding: 15px;
-            margin: 0 auto;
-            color: #017572;
-         }
-         
-         .form-signin .form-signin-heading,
-         .form-signin .checkbox {
-            margin-bottom: 10px;
-         }
-         
-         .form-signin .checkbox {
-            font-weight: normal;
-         }
-         
-         .form-signin .form-control {
-            position: relative;
-            height: auto;
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-            padding: 10px;
-            font-size: 16px;
-         }
-         
-         .form-signin .form-control:focus {
-            z-index: 2;
-         }
-         
-         .form-signin input[type="email"] {
-            margin-bottom: -1px;
-            border-bottom-right-radius: 0;
-            border-bottom-left-radius: 0;
-            border-color:#017572;
-         }
-         
-         .form-signin input[type="password"] {
-            margin-bottom: 10px;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            border-color:#017572;
-         }
-         
-         h2{
-            text-align: center;
-            color: #017572;
-         }
-      </style>
-      
-   </head>
+include('db.php');
+mysqli_select_db('payroll');
+if(isset($_POST['btnlogin']))
+{
+	$name=$_POST['gname'];
+	$pass=$_POST['gpass'];
 	
-   <body >
-      
-      <h2>Enter Username and Password</h2> 
-      <div class = "container form-signin">
-         
-         <?php
-            $msg = '';
-            
-            if (isset($_POST['login']) && !empty($_POST['username']) 
-               && !empty($_POST['password'])) {
-				
-               if ($_POST['username'] == 'admin' && 
-                  $_POST['password'] == 'admin@123') {
-                  $_SESSION['valid'] = true;
-                  $_SESSION['timeout'] = time();
-                  $_SESSION['username'] = 'tutorialspoint';
-                  
-                  echo 'You have entered valid use name and password';
-               }else {
-                  $msg = 'Wrong username or password';
-               }
-            }
-         ?>
-      </div> <!-- /container -->
-      
-      <div class = "container">
-      
-         <form class = "form-signin" role = "form" 
-            action = "SQL2.php" method = "post">
-            <h4 class = "form-signin-heading"><?php echo $msg; ?></h4>
-            <input type = "text" class = "form-control" 
-               name = "username" placeholder = "admin" 
-               required autofocus></br>
-            <input type = "password" class = "form-control"
-               name = "password" placeholder = "admin@123" required>
-            <button class = "btn btn-lg btn-primary btn-block" type = "submit" 
-               name = "login">Login</button>
-         </form>
-			
-         Click here to clean <a href = "logout.php" tite = "Logout">Session.
-         
-      </div> 
-      
-   </body>
+	$sql="select reguname,regpass from register where reguname='$name';";
+	//echo $sql;
+	$query=mysql_query($sql);
+	//echo $query;
+	while($row=mysql_fetch_array($query))
+	{
+		$gname=$row['reguname'];
+		$gpass=$row['regpass'];
+
+		echo $gname." "."".$gpass;
+			if($name==$gname && $pass==$gpass)
+			{
+				header('Location:admin.php');
+			}
+			else
+			{
+				echo "Invalid Credentials";
+			}
+		
+	}
+}
+?>
+<html>
+<head><title>Payroll Management System</title></head>
+<body>
+<Form name="loginform" method="POST">
+<div style="width:100%;height:100%">
+<!--Header-->
+<?php
+include_once("header.php");
+?>
+<!--Menu panel-->
+<div style="background-color:#999966;width:100%;height:5%;">
+
+<a href="login.php">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="aboutus.php">About Us</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+</div>
+
+<!--Content-->
+<div style="background-color:#e6f2ff;width:1340px;height:500px;float:left">
+
+<br/><br/><br/><br/><br/><br/>
+<table border="1" align="center">
+<tr>
+<td colspan="2">
+<h3 align="center">Login</h3>
+</td>
+</tr>
+<tr>
+<td>
+Enter Username:</td><td><input type="text" name="gname" value="" required>
+</td>
+</tr>
+<tr>
+<td>
+Enter Password:</td><td><input type="password" name="gpass" value="" required>
+</td>
+</tr>
+<tr>
+<td colspan="2">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="Submit" name="btnlogin" value="Login" >
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="reset" name="btncancel" value="cancel">
+</td>
+</tr>
+</table>
+<form>
+
+</div>
+<!--Footer-->
+<?php
+include_once("footer.php");
+?>
+</div>
+</body>
 </html>
